@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.png">
+<title>3B Fundus</title>
+<style>
+  /* Bosman van Zaal huisstijl */
+  :root {
+    --navy: #1E2A44; --oranje: #E8622A; --licht: #EEF1F6;
+    --tekst: #444444; --muted: #7a8599; --wit: #ffffff; --rand: #d9dee8;
+    --ok: #2e8b57; --fout: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--licht); color: var(--tekst);
+         font-family: Calibri, Carlito, "Segoe UI", sans-serif; }
+
+  header { background: var(--wit); border-bottom: 3px solid var(--oranje); }
+  .kop { max-width: 820px; margin: 0 auto; padding: 14px 16px;
+         display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .kop img { height: 52px; display: block; }
+  .kop .web { color: var(--navy); font-size: 1rem; font-weight: 700; text-decoration: none; }
+  .kop .web:hover { color: var(--oranje); }
+
+  main { max-width: 820px; margin: 0 auto; padding: 24px 16px 40px; }
+  h1 { color: var(--navy); font-size: 2rem; font-weight: 700; margin: 0; }
+  .sub { color: var(--oranje); font-style: italic; font-size: 1.1rem; margin: 2px 0 20px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+  .card { background: var(--wit); border: 1px solid var(--rand); border-radius: 6px; overflow: hidden; }
+  .card .titel { background: var(--navy); color: var(--wit); font-weight: 700;
+                 padding: 8px 16px; font-size: 1.1rem; letter-spacing: .02em; }
+  .card .inhoud { padding: 16px; }
+  .label { color: var(--muted); font-size: .95rem; margin-bottom: 4px; }
+  .value { font-size: 5rem; font-weight: 700; line-height: 1; color: var(--oranje);
+           font-variant-numeric: tabular-nums; }
+  .addr { margin-top: 8px; display: inline-block; background: var(--licht); color: var(--navy);
+          padding: 2px 8px; border-radius: 4px; font-family: Consolas, ui-monospace, monospace; font-size: .9rem; }
+
+  .status { margin-top: 14px; font-size: .95rem; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rand); flex: none; }
+  .status.ok .dot { background: var(--ok); }
+  .status.fout .dot { background: var(--fout); }
+  .status.fout { color: var(--fout); }
+</style>
+</head>
+<body>
+<header>
+  <div class="kop">
+    <img src="/logo.png" alt="Bosman van Zaal">
+    <a class="web" href="/">&larr; Alle klanten</a>
+  </div>
+</header>
+
+<main>
+  <h1>3B Fundus</h1>
+  <div class="sub" id="sub">Live, ververst elke seconde</div>
+  <div class="grid" id="waarden"></div>
+  <div class="status" id="status"><span class="dot"></span><span id="stekst">Verbinden…</span></div>
+</main>
+
+<script>
+  const esc = s => String(s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
+  function kaart(w) {
+    let k = document.getElementById("w-" + w.sleutel);
+    if (!k) {
+      document.getElementById("waarden").insertAdjacentHTML("beforeend", `
+        <div class="card" id="w-${esc(w.sleutel)}">
+          <div class="titel">${esc(w.naam)}</div>
+          <div class="inhoud">
+            <div class="label">Waarde</div>
+            <div class="value">–</div>
+            <span class="addr">${esc(w.adres)}</span>
+          </div>
+        </div>`);
+      k = document.getElementById("w-" + w.sleutel);
+    }
+    return k;
+  }
+
+  async function ververs(p) {
+    const status = document.getElementById("status");
+    const tekst = document.getElementById("stekst");
+    try {
+      const r = await fetch(`api/${encodeURIComponent(p.sleutel)}/waarden`, { cache: "no-store" });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.fout);
+      for (const w of d.waarden) kaart(w).querySelector(".value").textContent = w.waarde;
+      status.className = "status ok";
+      tekst.textContent = `Verbonden · laatste update ${d.tijd}`;
+    } catch (e) {
+      document.querySelectorAll("#waarden .value").forEach(v => v.textContent = "–");
+      status.className = "status fout";
+      tekst.textContent = `Geen verbinding: ${e.message}`;
+    }
+    setTimeout(() => ververs(p), 1000);
+  }
+
+  async function start() {
+    const info = await (await fetch("info", { cache: "no-store" })).json();
+    const p = info.plcs.find(x => x.sleutel === "master");
+    document.getElementById("sub").textContent = `${p.naam} ${p.ip} · live, ververst elke seconde`;
+    ververs(p);
+  }
+
+  start();
+</script>
+</body>
+</html>

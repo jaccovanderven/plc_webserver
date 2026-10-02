@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.png">
+<title>Lege Schijven Buffer</title>
+<style>
+  /* Bosman van Zaal huisstijl */
+  :root {
+    --navy: #1E2A44; --oranje: #E8622A; --licht: #EEF1F6;
+    --tekst: #444444; --muted: #7a8599; --wit: #ffffff; --rand: #d9dee8;
+    --ok: #2e8b57; --fout: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--licht); color: var(--tekst);
+         font-family: Calibri, Carlito, "Segoe UI", sans-serif; }
+
+  header { background: var(--wit); border-bottom: 3px solid var(--oranje); }
+  .kop { max-width: 820px; margin: 0 auto; padding: 14px 16px;
+         display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .kop img { height: 52px; display: block; }
+  .kop .web { color: var(--navy); font-size: 1rem; font-weight: 700; text-decoration: none; }
+  .kop .web:hover { color: var(--oranje); }
+
+  main { max-width: 820px; margin: 0 auto; padding: 24px 16px 40px; }
+  h1 { color: var(--navy); font-size: 2rem; font-weight: 700; margin: 0; }
+  .sub { color: var(--oranje); font-style: italic; font-size: 1.1rem; margin: 2px 0 20px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; }  }
+
+  .card { background: var(--wit); border: 1px solid var(--rand); border-radius: 6px; overflow: hidden; }
+  .card .titel { background: var(--navy); color: var(--wit); font-weight: 700;
+                 padding: 8px 16px; font-size: 1rem; letter-spacing: .02em; }
+  .card .inhoud { padding: 16px; }
+  .value { font-size: 5rem; font-weight: 700; line-height: 1; color: var(--navy);
+           font-variant-numeric: tabular-nums; }
+  .card.accent .value { color: var(--oranje); }
+  .addr { margin-top: 8px; display: inline-block; background: var(--licht); color: var(--navy);
+          padding: 2px 8px; border-radius: 4px; font-family: Consolas, ui-monospace, monospace; font-size: .9rem; }
+
+  .status { margin: 16px 0; font-size: 1rem; display: flex; align-items: center; gap: 8px; color: var(--tekst); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); flex: none; }
+  .status.fout .dot { background: var(--fout); }
+  .status.fout { color: var(--fout); }
+
+  .vrijgave { display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+              padding: 12px 16px; border-radius: 6px; border: 1px solid var(--rand);
+              background: var(--wit); font-size: 1.3rem; font-weight: 700; color: var(--navy); }
+  .vrijgave .vtekst { flex: 1; }
+  .vrijgave .addr { margin-top: 0; font-weight: 400; }
+  .lamp { width: 22px; height: 22px; border-radius: 50%; background: var(--rand); flex: none; }
+  .vrijgave.aan { border-color: var(--ok); border-left: 6px solid var(--ok); }
+  .vrijgave.aan .lamp { background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+  .vrijgave.uit { border-left: 6px solid var(--oranje); }
+  .vrijgave.uit .lamp { background: var(--oranje); }
+
+  h2 { color: var(--navy); font-size: 1.3rem; margin: 24px 0 8px; }
+  table { width: 100%; border-collapse: collapse; background: var(--wit);
+          border: 1px solid var(--rand); font-variant-numeric: tabular-nums; }
+  th { background: var(--navy); color: var(--wit); text-align: left; padding: 8px 12px; font-weight: 700; }
+  td { padding: 7px 12px; border-top: 1px solid var(--rand); }
+  tbody tr:nth-child(even) td { background: var(--licht); }
+  tbody tr:first-child td { font-weight: 700; color: var(--navy); }
+  td.mono { font-family: Consolas, ui-monospace, monospace; font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="kop">
+    <img src="/logo.png" alt="Bosman van Zaal">
+    <a class="web" href="/">&larr; Alle klanten</a>
+  </div>
+</header>
+
+<main>
+  <h1>Lege Schijven Buffer</h1>
+  <div class="sub">Greenbalanz · Sorteer PLC 192.168.38.212 · live, ververst elke seconde</div>
+
+  <div class="vrijgave onbekend" id="vrijgave">
+    <span class="lamp"></span>
+    <span class="vtekst" id="vrijgavetekst">Vrijgave lossen: –</span>
+    <span class="addr">W450.03</span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="titel">Baan in lossen</div>
+      <div class="inhoud">
+        <div class="value" id="baan">–</div>
+        <span class="addr">D18857</span>
+      </div>
+    </div>
+    <div class="card accent">
+      <div class="titel">Cups nog in baan</div>
+      <div class="inhoud">
+        <div class="value" id="cups">–</div>
+        <span class="addr" id="adres">D177xx</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status"><span class="dot"></span><span id="statustekst">Verbinden…</span></div>
+
+  <h2>Laatst geloste banen</h2>
+  <table>
+    <thead><tr><th>Baan</th><th>Cups (laatst gezien)</th><th>Adres</th><th>Tijd</th></tr></thead>
+    <tbody id="historie"></tbody>
+  </table>
+</main>
+
+<script>
+  const banen = new Map();   // baan -> {cups, adres, tijd, volgorde}
+
+  function toonHistorie() {
+    const rijen = [...banen.entries()]
+      .sort((a, b) => b[1].volgorde - a[1].volgorde)
+      .slice(0, 15)
+      .map(([baan, r]) => `<tr><td>${baan}</td><td>${r.cups}</td><td class="mono">${r.adres}</td><td>${r.tijd}</td></tr>`);
+    document.getElementById("historie").innerHTML = rijen.join("");
+  }
+
+  let teller = 0;
+  async function ververs() {
+    const status = document.getElementById("status");
+    const tekst = document.getElementById("statustekst");
+    try {
+      const r = await fetch("api/sorteer/baan", { cache: "no-store" });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.fout);
+      document.getElementById("baan").textContent = d.baan;
+      document.getElementById("cups").textContent = d.cups;
+      document.getElementById("adres").textContent = d.adres_cups;
+      const vr = document.getElementById("vrijgave");
+      vr.className = "vrijgave " + (d.vrijgave ? "aan" : "uit");
+      document.getElementById("vrijgavetekst").textContent =
+        d.vrijgave ? "Vrijgave lossen: JA" : "Vrijgave lossen: NEE";
+      status.classList.remove("fout");
+      tekst.textContent = `Verbonden · laatste update ${d.tijd}`;
+      banen.set(d.baan, { cups: d.cups, adres: d.adres_cups, tijd: d.tijd, volgorde: ++teller });
+      toonHistorie();
+    } catch (e) {
+      status.classList.add("fout");
+      document.getElementById("vrijgave").className = "vrijgave onbekend";
+      document.getElementById("vrijgavetekst").textContent = "Vrijgave lossen: –";
+      tekst.textContent = `Geen verbinding: ${e.message}`;
+    }
+  }
+
+  ververs();
+  setInterval(ververs, 1000);
+</script>
+</body>
+</html>
