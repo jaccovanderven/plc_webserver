@@ -146,7 +146,7 @@
           <div class="apparaten">${[...k.plcs, ...k.vnc].map(p => `
             <span class="dot ${p.online === true ? "aan" : p.online === false ? "uit" : ""}"></span><span class="pnaam">${esc(p.naam)}</span><span class="addr">${esc(p.ip)}</span><span class="st ${p.online === false ? "uit" : ""}">${p.online === true ? "online" : p.online === false ? "offline" : "…"}</span>`).join("")}</div>
           <div class="knoppen">
-            ${k.plcs.some(p => p.online) ? `<a class="knop" href="/klant/${encodeURIComponent(k.sleutel)}/">Insights</a>` : ""}
+            ${k.plcs.some(p => p.online) ? `<a class="knop" href="/klant/${encodeURIComponent(k.sleutel)}/">Monitor</a>` : ""}
             ${k.vnc.filter(v => v.online).map(v => `<button type="button" class="knop tweede" data-vnc="${esc(v.sleutel)}">VNC ${esc(v.naam)}</button>`).join("")}
           </div>
           <div class="melding" role="status">${esc(melding)}</div>

@@ -1,16 +1,16 @@
 # LiveLink
 
-Versie **0.4.0** · Bosman van Zaal · Jacco van der Ven
+Versie **0.4.1** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
-## Waar staan we (v0.4.0, 3 oktober 2026)
+## Waar staan we (v0.4.1, 3 oktober 2026)
 
 - **Startpagina** heeft een pulldown-menu om een project te kiezen. Daaronder staat een kaart met de PLC's en HMI's van dat project: naam, IP-adres en online/offline (gecontroleerd met ping, elke 5 s). De browser onthoudt het laatst gekozen project.
-  - **Insights** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van de klant online is.
+  - **Monitor** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van het project online is.
   - **VNC &lt;HMI&gt;** start RealVNC Viewer op deze pc met het IP-adres van de HMI. De knop is alleen zichtbaar als de HMI online is, en werkt alleen vanaf de pc waarop de server draait.
   - In de kop staat links het LiveLink-logo en rechts het Bosman van Zaal-logo. Onderaan de pagina staat het versienummer met de link **About**: programma-info, versie en de wijzigingen per versie.
-- **Datapagina's (Insights)** per project verversen elke seconde. Ze hebben dezelfde kop als de startpagina (LiveLink links, Bosman van Zaal rechts), met "← Alle projecten" boven de titel.
+- **Datapagina's (Monitor)** per project verversen elke seconde. Ze hebben dezelfde kop als de startpagina (LiveLink links, Bosman van Zaal rechts), met "← Alle projecten" boven de titel.
 - **PLC-verbinding** gaat via FINS/TCP en wordt pas gemaakt als een datapagina vraagt om data. Na 15 s zonder verzoeken sluit de server de verbinding weer.
 - **Eén server tegelijk:** draait de server al, dan stopt een tweede start met de melding dat poort 8080 in gebruik is.
 - **Huisstijl** van Bosman van Zaal (navy/oranje, Calibri), met logo en favicon.
