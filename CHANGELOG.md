@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.3.9 - 2026-10-03
+
+- Nieuw LiveLink-icoon: Venlo-kas met een PLC erin en een oranje datapuls naar buiten (kas, PLC en data in één beeld)
+
 ## 0.3.8 - 2026-10-03
 
 - Insights-pagina's: zelfde kop als de startpagina, LiveLink-logo links (klikbaar, terug naar start) en Bosman van Zaal-logo rechts
