@@ -1,15 +1,15 @@
 # GreenSight
 
-Versie **0.3.2** · Bosman van Zaal · Jacco van der Ven
+Versie **0.3.3** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
-## Waar staan we (v0.3.2, 3 oktober 2026)
+## Waar staan we (v0.3.3, 3 oktober 2026)
 
 - **Startpagina** heeft een pulldown-menu om een klant te kiezen. Daaronder staat een kaart met de PLC's en HMI's van die klant: naam, IP-adres en online/offline (gecontroleerd met ping, elke 5 s). De browser onthoudt de laatst gekozen klant.
   - **Insights** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van de klant online is.
   - **VNC &lt;HMI&gt;** start RealVNC Viewer op deze pc met het IP-adres van de HMI. De knop is alleen zichtbaar als de HMI online is, en werkt alleen vanaf de pc waarop de server draait.
-  - **About** (rechtsboven) toont programma-info, versie en de wijzigingen per versie. Onderaan de pagina staat het versienummer.
+  - In de kop staat links het GreenSight-logo en rechts het Bosman van Zaal-logo met de knop **About**. About toont programma-info, versie en de wijzigingen per versie. Onderaan de pagina staat het versienummer.
 - **Datapagina's** per klant verversen elke seconde.
 - **PLC-verbinding** gaat via FINS/TCP en wordt pas gemaakt als een datapagina vraagt om data. Na 15 s zonder verzoeken sluit de server de verbinding weer.
 - **Eén server tegelijk:** draait de server al, dan stopt een tweede start met de melding dat poort 8080 in gebruik is.

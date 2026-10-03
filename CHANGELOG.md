@@ -3,6 +3,12 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de knop **About** op de startpagina.
 
+## 0.3.3 - 2026-10-03
+
+- Startpagina: GreenSight-logo links in de kop (boven de oranje lijn), Bosman van Zaal-logo rechts met kleine knop About eronder
+- www.bosmanvanzaal.com staat nu in het About-venster in plaats van in de kop
+- Tekst "Kies een klant om de live PLC-gegevens te bekijken" staat onder het pulldown-menu
+
 ## 0.3.2 - 2026-10-03
 
 - GreenSight-logo: Venlo-kas met oranje tandwiel (automatisering) en blad (teelt), als kop op de startpagina en in het About-venster (`greensight_logo.svg`, `greensight_icon.svg`)
