@@ -1,15 +1,15 @@
 # PLC Webserver
 
-Versie **0.2.5** · Bosman van Zaal · Jacco van der Ven
+Versie **0.3.0** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
-## Waar staan we (v0.2.5, 3 oktober 2026)
+## Waar staan we (v0.3.0, 3 oktober 2026)
 
 - **Startpagina** heeft een pulldown-menu om een klant te kiezen. Daaronder staat een kaart met de PLC's en HMI's van die klant: naam, IP-adres en online/offline (gecontroleerd met ping, elke 5 s). De browser onthoudt de laatst gekozen klant.
   - **Insights** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van de klant online is.
   - **VNC &lt;HMI&gt;** start RealVNC Viewer op deze pc met het IP-adres van de HMI. De knop is alleen zichtbaar als de HMI online is, en werkt alleen vanaf de pc waarop de server draait.
-  - Onderaan de pagina staat het versienummer.
+  - **About** (rechtsboven) toont programma-info, versie en de wijzigingen per versie. Onderaan de pagina staat het versienummer.
 - **Datapagina's** per klant verversen elke seconde.
 - **PLC-verbinding** gaat via FINS/TCP en wordt pas gemaakt als een datapagina vraagt om data. Na 15 s zonder verzoeken sluit de server de verbinding weer.
 - **Eén server tegelijk:** draait de server al, dan stopt een tweede start met de melding dat poort 8080 in gebruik is.
@@ -17,15 +17,7 @@ Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Om
 
 ### Versies
 
-| Versie | Datum | Wijzigingen |
-|---|---|---|
-| 0.2.5 | 3 okt 2026 | Slijkerman Insights: status alleen als tekst (bijv. "Rust"), zonder PLC-waarde; onbekende waarde = "Onbekend" |
-| 0.2.4 | 3 okt 2026 | Slijkerman Insights: kolomkop "CTR" heet nu "Machine" |
-| 0.2.3 | 3 okt 2026 | Startpagina: IP-adressen van PLC's en HMI's verticaal uitgelijnd |
-| 0.2.2 | 3 okt 2026 | Logo in de kop van alle pagina's groter (52 → 68 px) |
-| 0.2.1 | 3 okt 2026 | Slijkerman Insights: posities en status in één tabel in plaats van losse tegels, zonder D-adressen |
-| 0.2.0 | 3 okt 2026 | VNC-knop voor HMI's, knop Insights (alleen zichtbaar als een PLC online is), beveiliging tegen dubbel starten |
-| 0.1.0 | 2 okt 2026 | Eerste versie: pulldown-menu met klanten, Greenbalanz, Slijkerman en 3B Fundus |
+Alle wijzigingen per versie staan in [CHANGELOG.md](CHANGELOG.md). Op de startpagina zijn ze ook te zien via de knop **About**.
 
 ### Klanten
 
@@ -108,7 +100,7 @@ Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/): **MAJOR
 
 Een hoger deel zet de lagere delen terug op 0. **0.x.y** betekent "in ontwikkeling"; **1.0.0** wordt de eerste stabiele versie.
 
-Hoog bij elke wijziging `VERSIE` in `webserver.py` op. Dat nummer staat ook onderaan de startpagina. Werk de versietabel hierboven bij, en commit, tag en push daarna:
+Zet bij elke wijziging bovenaan in [CHANGELOG.md](CHANGELOG.md) een nieuwe kop `## X.Y.Z - JJJJ-MM-DD` met daaronder de wijzigingen als `- regel`. De server haalt zijn versienummer uit die bovenste kop. Het nummer staat dan vanzelf onderaan de startpagina, en de wijzigingen staan onder **About**. Pas daarna `Versie` bovenaan deze README aan, herstart de server, en commit, tag en push:
 
 ```bat
 git commit -am "..."

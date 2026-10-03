@@ -21,6 +21,7 @@ Open:   http://localhost:8080
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -35,12 +36,30 @@ KLANTEN_MAP = os.path.join(MAP, "klanten")
 sys.path.insert(0, os.path.join(MAP, "..", "_tools", "plc_tool"))
 from fins import FinsClient  # noqa: E402
 
-VERSIE = "0.2.5"
+MAKER = "Jacco van der Ven"
 POORT = 8080
 IDLE_SEC = 15                         # PLC-verbinding sluiten na zoveel s zonder verzoek
 VERBODEN = (".py", ".pyc", ".ini")    # worden niet als bestand geserveerd
 PING_CACHE_SEC = 4                    # online-status (ping) zo lang hergebruiken
 VNC_VIEWER = r"C:\Program Files\RealVNC\VNC Viewer\vncviewer.exe"
+
+
+def lees_changelog():
+    """[{"versie", "datum", "wijzigingen": [...]}, ...] uit CHANGELOG.md, nieuwste eerst.
+    Koppen '## X.Y.Z - JJJJ-MM-DD', daaronder regels '- wijziging'."""
+    versies = []
+    with open(os.path.join(MAP, "CHANGELOG.md"), encoding="utf-8") as f:
+        for regel in f:
+            kop = re.match(r"##\s+(\d+\.\d+\.\d+)\s*-\s*(\S+)", regel)
+            if kop:
+                versies.append({"versie": kop[1], "datum": kop[2], "wijzigingen": []})
+            elif versies and regel.startswith("- "):
+                versies[-1]["wijzigingen"].append(regel[2:].strip())
+    return versies
+
+
+CHANGELOG = lees_changelog()
+VERSIE = CHANGELOG[0]["versie"]       # bovenste versie in CHANGELOG.md
 
 
 def ping(ip):
@@ -201,6 +220,10 @@ class Handler(SimpleHTTPRequestHandler):
 
         if pad == "/api/versie":
             return self.stuur_json({"versie": VERSIE})
+
+        if pad == "/api/about":
+            return self.stuur_json({"naam": "PLC Webserver", "versie": VERSIE, "maker": MAKER,
+                                    "bedrijf": "Bosman van Zaal", "changelog": CHANGELOG})
 
         if pad.startswith("/klant/"):
             sleutel, _, rest = pad[len("/klant/"):].partition("/")

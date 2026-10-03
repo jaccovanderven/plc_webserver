@@ -66,15 +66,57 @@
   .leeg, .fout { padding: 16px; background: var(--wit); border: 1px solid var(--rand); border-radius: 6px; }
   .fout { color: var(--fout); }
   .versie { margin-top: 32px; color: var(--muted); font-size: .85rem; }
+
+  .rechts { display: flex; align-items: center; gap: 16px; }
+  .about-knop { font: inherit; font-weight: 700; color: var(--navy); background: var(--licht);
+                border: 1px solid var(--rand); border-radius: 4px; padding: 6px 14px; cursor: pointer; }
+  .about-knop:hover, .about-knop:focus-visible { border-color: var(--oranje); color: var(--oranje); }
+
+  dialog#about { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 64px); padding: 0;
+                 border: 1px solid var(--rand); border-top: 4px solid var(--oranje); border-radius: 6px;
+                 color: var(--tekst); font-family: inherit; }
+  dialog#about::backdrop { background: rgba(30, 42, 68, .45); }
+  dialog#about[open] { display: flex; flex-direction: column; }
+  .about-kop { display: flex; align-items: center; gap: 14px; padding: 18px 20px 0; }
+  .about-kop img { width: 48px; height: 48px; }
+  .about-kop h2 { margin: 0; color: var(--navy); font-size: 1.5rem; }
+  .about-meta { color: var(--muted); font-size: .95rem; }
+  .about-tekst { margin: 12px 20px 0; }
+  dialog#about h3 { margin: 16px 20px 6px; color: var(--navy); font-size: 1.05rem; }
+  .about-lijst { overflow-y: auto; padding: 0 20px; border-top: 1px solid var(--rand); }
+  .about-versie { padding: 10px 0; border-bottom: 1px solid var(--rand); }
+  .about-versie b { color: var(--navy); }
+  .about-versie .datum { color: var(--muted); font-size: .9rem; margin-left: 6px; }
+  .about-versie ul { margin: 4px 0 0; padding-left: 20px; }
+  .about-versie.huidig b { color: var(--oranje); }
+  dialog#about form { padding: 14px 20px 18px; margin: 0; }
+  dialog#about form .knop { margin: 0; border: 0; cursor: pointer; font: inherit; font-weight: 700; }
 </style>
 </head>
 <body>
 <header>
   <div class="kop">
     <img src="logo.png" alt="Bosman van Zaal">
-    <span class="web">www.bosmanvanzaal.com</span>
+    <div class="rechts">
+      <span class="web">www.bosmanvanzaal.com</span>
+      <button type="button" class="about-knop" id="about-knop">About</button>
+    </div>
   </div>
 </header>
+
+<dialog id="about" aria-labelledby="about-titel">
+  <div class="about-kop">
+    <img src="favicon.png" alt="">
+    <div>
+      <h2 id="about-titel">PLC Webserver</h2>
+      <div class="about-meta" id="about-meta"></div>
+    </div>
+  </div>
+  <p class="about-tekst">Live uitlezen van Omron-PLC's bij klanten via FINS, met online-status van PLC's en HMI's en VNC naar de HMI.</p>
+  <h3>Wijzigingen per versie</h3>
+  <div class="about-lijst" id="about-lijst"></div>
+  <form method="dialog"><button class="knop">Sluiten</button></form>
+</dialog>
 
 <main>
   <h1>PLC Webserver</h1>
@@ -150,9 +192,18 @@
   }
 
   keuze.addEventListener("change", () => { melding = ""; toon(); });
-  fetch("/api/versie").then(r => r.json())
-    .then(d => document.getElementById("versie").textContent = `PLC Webserver v${d.versie}`)
-    .catch(() => {});
+  const datumNl = s => new Date(s + "T12:00").toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+  fetch("/api/about").then(r => r.json()).then(a => {
+    document.getElementById("versie").textContent = `${a.naam} v${a.versie}`;
+    document.getElementById("about-meta").textContent = `Versie ${a.versie} · ${a.bedrijf} · ${a.maker}`;
+    document.getElementById("about-lijst").innerHTML = a.changelog.map((v, i) => `
+      <div class="about-versie${i === 0 ? " huidig" : ""}">
+        <b>v${esc(v.versie)}</b><span class="datum">${esc(datumNl(v.datum))}${i === 0 ? " · huidige versie" : ""}</span>
+        <ul>${v.wijzigingen.map(w => `<li>${esc(w.replace(/\*\*/g, "").replace(/`/g, ""))}</li>`).join("")}</ul>
+      </div>`).join("");
+  }).catch(() => {});
+  document.getElementById("about-knop").addEventListener("click", () => document.getElementById("about").showModal());
   laad();
   setInterval(laad, 5000);
 </script>
