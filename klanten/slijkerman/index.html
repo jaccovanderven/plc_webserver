@@ -27,25 +27,17 @@
   h1 { color: var(--navy); font-size: 2rem; font-weight: 700; margin: 0; }
   .sub { color: var(--oranje); font-style: italic; font-size: 1.1rem; margin: 2px 0 20px; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-
-  .card { background: var(--wit); border: 1px solid var(--rand); border-radius: 6px; overflow: hidden; }
-  .card .titel { background: var(--navy); color: var(--wit); font-weight: 700;
-                 padding: 8px 16px; font-size: 1.1rem; letter-spacing: .02em;
-                 display: flex; justify-content: space-between; gap: 8px; }
-  .card .titel .ip { font-weight: 400; opacity: .8; font-family: Consolas, ui-monospace, monospace; font-size: .9rem; }
-  .card .inhoud { padding: 16px; }
-  .label { color: var(--muted); font-size: .95rem; margin-bottom: 4px; }
-  .value { font-size: 5rem; font-weight: 700; line-height: 1; color: var(--oranje);
-           font-variant-numeric: tabular-nums; }
-  .addr { margin-top: 8px; display: inline-block; background: var(--licht); color: var(--navy);
-          padding: 2px 8px; border-radius: 4px; font-family: Consolas, ui-monospace, monospace; font-size: .9rem; }
-
-  .mstatus { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rand);
-             display: flex; align-items: center; gap: 10px; }
-  .mstatus .label { margin: 0; }
-  .mstatus .stxt { font-size: 1.4rem; font-weight: 700; color: var(--navy); flex: 1; }
-  .mstatus .addr { margin-top: 0; }
+  .tabelvak { background: var(--wit); border: 1px solid var(--rand); border-radius: 6px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--navy); color: var(--wit); font-weight: 700; text-align: left;
+       padding: 10px 16px; font-size: 1rem; letter-spacing: .02em; white-space: nowrap; }
+  td { padding: 12px 16px; border-top: 1px solid var(--rand); vertical-align: middle; white-space: nowrap; }
+  tbody tr:nth-child(even) td { background: #f7f8fb; }
+  td.naam { color: var(--navy); font-weight: 700; font-size: 1.15rem; }
+  td.positie, th.positie { text-align: right; }
+  td.positie { font-size: 2rem; font-weight: 700; line-height: 1; color: var(--oranje);
+               font-variant-numeric: tabular-nums; }
+  td.stxt { font-size: 1.15rem; font-weight: 700; color: var(--navy); }
   .status { margin-top: 14px; font-size: .95rem; display: flex; align-items: center; gap: 8px; }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rand); flex: none; }
   .status.ok .dot { background: var(--ok); }
@@ -64,7 +56,14 @@
 <main>
   <h1>Slijkerman</h1>
   <div class="sub" id="sub">CTR · live, ververst elke seconde</div>
-  <div class="grid" id="posities"></div>
+  <div class="tabelvak">
+    <table>
+      <thead>
+        <tr><th>CTR</th><th class="positie">Positie</th><th>Status</th></tr>
+      </thead>
+      <tbody id="posities"></tbody>
+    </table>
+  </div>
   <div class="status" id="status"><span class="dot"></span><span id="stekst">Verbinden…</span></div>
 </main>
 
@@ -72,19 +71,15 @@
   const esc = s => String(s).replace(/[&<>"']/g, c =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
-  function kaart(pos) {
+  function rij(pos) {
     let k = document.getElementById("pos-" + pos.sleutel);
     if (!k) {
       document.getElementById("posities").insertAdjacentHTML("beforeend", `
-        <div class="card" id="pos-${esc(pos.sleutel)}">
-          <div class="titel"><span>${esc(pos.naam)}</span></div>
-          <div class="inhoud">
-            <div class="label">Huidige positie</div>
-            <div class="value">–</div>
-            <span class="addr">${esc(pos.adres)}</span>
-            ${"status" in pos ? `<div class="mstatus"><span class="label">Status</span><span class="stxt">–</span><span class="addr saddr">${esc(pos.status_adres)}</span></div>` : ""}
-          </div>
-        </div>`);
+        <tr id="pos-${esc(pos.sleutel)}">
+          <td class="naam">${esc(pos.naam)}</td>
+          <td class="positie value">–</td>
+          <td class="stxt">${"status" in pos ? "–" : ""}</td>
+        </tr>`);
       k = document.getElementById("pos-" + pos.sleutel);
     }
     return k;
@@ -98,16 +93,14 @@
       const d = await r.json();
       if (!d.ok) throw new Error(d.fout);
       for (const pos of d.posities) {
-        const k = kaart(pos);
+        const k = rij(pos);
         k.querySelector(".value").textContent = pos.positie;
-        k.querySelector(".addr").textContent = pos.adres;
-        const st = k.querySelector(".stxt");
-        if (st) st.textContent = `${pos.status_tekst} (${pos.status})`;
+        if ("status" in pos) k.querySelector(".stxt").textContent = `${pos.status_tekst} (${pos.status})`;
       }
       status.className = "status ok";
       tekst.textContent = `Verbonden · laatste update ${d.tijd}`;
     } catch (e) {
-      document.querySelectorAll("#posities .value, #posities .stxt").forEach(v => v.textContent = "–");
+      document.querySelectorAll("#posities .value, #posities .stxt").forEach(v => { if (v.textContent) v.textContent = "–"; });
       status.className = "status fout";
       tekst.textContent = `Geen verbinding: ${e.message}`;
     }
