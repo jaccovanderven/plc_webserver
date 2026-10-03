@@ -1,4 +1,4 @@
-"""Webserver voor alle klant-PLC's op één adres (http://localhost:8080).
+"""GreenSight - webserver voor alle klant-PLC's op één adres (http://localhost:8080).
 
 Elke submap van klanten/ met een klant.py verschijnt als knop op de
 startpagina. Pas als een klantpagina wordt geopend, wordt verbinding
@@ -36,6 +36,7 @@ KLANTEN_MAP = os.path.join(MAP, "klanten")
 sys.path.insert(0, os.path.join(MAP, "..", "_tools", "plc_tool"))
 from fins import FinsClient  # noqa: E402
 
+PROGRAMMA = "GreenSight"
 MAKER = "Jacco van der Ven"
 POORT = 8080
 IDLE_SEC = 15                         # PLC-verbinding sluiten na zoveel s zonder verzoek
@@ -222,7 +223,7 @@ class Handler(SimpleHTTPRequestHandler):
             return self.stuur_json({"versie": VERSIE})
 
         if pad == "/api/about":
-            return self.stuur_json({"naam": "PLC Webserver", "versie": VERSIE, "maker": MAKER,
+            return self.stuur_json({"naam": PROGRAMMA, "versie": VERSIE, "maker": MAKER,
                                     "bedrijf": "Bosman van Zaal", "changelog": CHANGELOG})
 
         if pad.startswith("/klant/"):
@@ -289,7 +290,7 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    print(f"PLC Webserver v{VERSIE}: http://localhost:{POORT}  (Ctrl+C om te stoppen)")
+    print(f"{PROGRAMMA} v{VERSIE}: http://localhost:{POORT}  (Ctrl+C om te stoppen)")
     for k in KLANTEN.values():
         ips = ", ".join(f"{p.naam} {p.ip}" for p in k.plcs.values())
         print(f"  - {k.naam} ({ips})  ->  /klant/{k.sleutel}/")

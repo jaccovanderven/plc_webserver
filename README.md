@@ -1,10 +1,10 @@
-# PLC Webserver
+# GreenSight
 
-Versie **0.3.0** · Bosman van Zaal · Jacco van der Ven
+Versie **0.3.1** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
-## Waar staan we (v0.3.0, 3 oktober 2026)
+## Waar staan we (v0.3.1, 3 oktober 2026)
 
 - **Startpagina** heeft een pulldown-menu om een klant te kiezen. Daaronder staat een kaart met de PLC's en HMI's van die klant: naam, IP-adres en online/offline (gecontroleerd met ping, elke 5 s). De browser onthoudt de laatst gekozen klant.
   - **Insights** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van de klant online is.
@@ -104,7 +104,7 @@ Zet bij elke wijziging bovenaan in [CHANGELOG.md](CHANGELOG.md) een nieuwe kop `
 
 ```bat
 git commit -am "..."
-git tag -a v0.x.0 -m "PLC Webserver v0.x.0"
+git tag -a v0.x.0 -m "GreenSight v0.x.0"
 git push --follow-tags
 ```
 

@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de knop **About** op de startpagina.
 
+## 0.3.1 - 2026-10-03
+
+- Programma heet nu **GreenSight** (was "PLC Webserver"): paginatitel, kop, About en console
+
 ## 0.3.0 - 2026-10-03
 
 - Knop **About** op de startpagina: programma-info, versie en de wijzigingen per versie
