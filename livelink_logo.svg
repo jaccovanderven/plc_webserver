@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="GreenSight">
-  <title>GreenSight</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 245 72" role="img" aria-label="LiveLink">
+  <title>LiveLink</title>
+  <g transform="translate(4 4)">
   <!-- Venlo-kas (drie nokken) -->
   <path d="M5 57 V31 L14 19 L23 31 L32 19 L41 31 L50 19 L59 31 V57 Z" fill="#e6f4ea" stroke="#2e8b57" stroke-width="3.5" stroke-linejoin="round"/>
   <path d="M23 31 V57 M41 31 V57 M5 31 H59" stroke="#2e8b57" stroke-width="1.6" stroke-opacity=".55"/>
@@ -8,4 +9,8 @@
   <circle cx="32" cy="43" r="6.2" fill="#ffffff"/>
   <path d="M28.6 46.2 C28.4 41.2 31.6 38.6 35.8 39.2 C36.2 43.8 33.4 46.8 28.6 46.2 Z" fill="#2e8b57"/>
   <path d="M28.9 45.9 L34.2 40.8" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+  </g>
+  <text x="80" y="50" font-family="Calibri, Carlito, 'Segoe UI', sans-serif" font-size="40" font-weight="700" letter-spacing=".5">
+    <tspan fill="#2e8b57">Live</tspan><tspan fill="#1E2A44">Link</tspan>
+  </text>
 </svg>

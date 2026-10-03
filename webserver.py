@@ -1,4 +1,4 @@
-"""GreenSight - webserver voor alle klant-PLC's op één adres (http://localhost:8080).
+"""LiveLink - webserver voor alle klant-PLC's op één adres (http://localhost:8080).
 
 Elke submap van klanten/ met een klant.py verschijnt als knop op de
 startpagina. Pas als een klantpagina wordt geopend, wordt verbinding
@@ -36,7 +36,7 @@ KLANTEN_MAP = os.path.join(MAP, "klanten")
 sys.path.insert(0, os.path.join(MAP, "..", "_tools", "plc_tool"))
 from fins import FinsClient  # noqa: E402
 
-PROGRAMMA = "GreenSight"
+PROGRAMMA = "LiveLink"
 MAKER = "Jacco van der Ven"
 POORT = 8080
 IDLE_SEC = 15                         # PLC-verbinding sluiten na zoveel s zonder verzoek
