@@ -40,6 +40,11 @@
   .card .inhoud { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
   .oms { color: var(--navy); font-size: 1.1rem; }
   .regel { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .95rem; }
+  /* PLC's/HMI's als raster: stip | naam | IP | status, zodat de IP-adressen onder elkaar staan */
+  .apparaten { display: grid; grid-template-columns: auto auto auto 1fr; align-items: center;
+               column-gap: 8px; row-gap: 10px; color: var(--muted); font-size: .95rem; }
+  .apparaten:empty { display: none; }
+  .apparaten .addr { justify-self: start; }
   .addr { background: var(--licht); color: var(--navy); padding: 2px 8px; border-radius: 4px;
           font-family: Consolas, ui-monospace, monospace; font-size: .9rem; }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rand); flex: none; }
@@ -97,8 +102,8 @@
         <div class="inhoud">
           ${k.omschrijving ? `<div class="oms">${esc(k.omschrijving)}</div>` : ""}
           ${k.plcs.length ? "" : `<div class="regel">Nog geen PLC's ingesteld</div>`}
-          ${[...k.plcs, ...k.vnc].map(p => `
-          <div class="regel"><span class="dot ${p.online === true ? "aan" : p.online === false ? "uit" : ""}"></span>${esc(p.naam)}<span class="addr">${esc(p.ip)}</span><span class="st ${p.online === false ? "uit" : ""}">${p.online === true ? "online" : p.online === false ? "offline" : "…"}</span></div>`).join("")}
+          <div class="apparaten">${[...k.plcs, ...k.vnc].map(p => `
+            <span class="dot ${p.online === true ? "aan" : p.online === false ? "uit" : ""}"></span><span class="pnaam">${esc(p.naam)}</span><span class="addr">${esc(p.ip)}</span><span class="st ${p.online === false ? "uit" : ""}">${p.online === true ? "online" : p.online === false ? "offline" : "…"}</span>`).join("")}</div>
           <div class="knoppen">
             ${k.plcs.some(p => p.online) ? `<a class="knop" href="/klant/${encodeURIComponent(k.sleutel)}/">Insights</a>` : ""}
             ${k.vnc.filter(v => v.online).map(v => `<button type="button" class="knop tweede" data-vnc="${esc(v.sleutel)}">VNC ${esc(v.naam)}</button>`).join("")}

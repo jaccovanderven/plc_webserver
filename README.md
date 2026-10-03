@@ -1,10 +1,10 @@
 # PLC Webserver
 
-Versie **0.2.2** · Bosman van Zaal · Jacco van der Ven
+Versie **0.2.3** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
-## Waar staan we (v0.2.2, 3 oktober 2026)
+## Waar staan we (v0.2.3, 3 oktober 2026)
 
 - **Startpagina** heeft een pulldown-menu om een klant te kiezen. Daaronder staat een kaart met de PLC's en HMI's van die klant: naam, IP-adres en online/offline (gecontroleerd met ping, elke 5 s). De browser onthoudt de laatst gekozen klant.
   - **Insights** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van de klant online is.
@@ -19,6 +19,7 @@ Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Om
 
 | Versie | Datum | Wijzigingen |
 |---|---|---|
+| 0.2.3 | 3 okt 2026 | Startpagina: IP-adressen van PLC's en HMI's verticaal uitgelijnd |
 | 0.2.2 | 3 okt 2026 | Logo in de kop van alle pagina's groter (52 → 68 px) |
 | 0.2.1 | 3 okt 2026 | Slijkerman Insights: posities en status in één tabel in plaats van losse tegels, zonder D-adressen |
 | 0.2.0 | 3 okt 2026 | VNC-knop voor HMI's, knop Insights (alleen zichtbaar als een PLC online is), beveiliging tegen dubbel starten |
