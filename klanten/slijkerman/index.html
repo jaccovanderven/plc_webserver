@@ -95,7 +95,7 @@
       for (const pos of d.posities) {
         const k = rij(pos);
         k.querySelector(".value").textContent = pos.positie;
-        if ("status" in pos) k.querySelector(".stxt").textContent = `${pos.status_tekst} (${pos.status})`;
+        if ("status" in pos) k.querySelector(".stxt").textContent = pos.status_tekst;
       }
       status.className = "status ok";
       tekst.textContent = `Verbonden · laatste update ${d.tijd}`;
