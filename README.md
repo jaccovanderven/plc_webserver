@@ -1,10 +1,10 @@
 # GreenSight
 
-Versie **0.3.1** · Bosman van Zaal · Jacco van der Ven
+Versie **0.3.2** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
-## Waar staan we (v0.3.1, 3 oktober 2026)
+## Waar staan we (v0.3.2, 3 oktober 2026)
 
 - **Startpagina** heeft een pulldown-menu om een klant te kiezen. Daaronder staat een kaart met de PLC's en HMI's van die klant: naam, IP-adres en online/offline (gecontroleerd met ping, elke 5 s). De browser onthoudt de laatst gekozen klant.
   - **Insights** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van de klant online is.
@@ -44,7 +44,8 @@ of `python webserver.py`. Open daarna http://localhost:8080. Stoppen doe je met 
 ```
 webserver.py          server: klanten laden, FINS-verbindingen, API, statische bestanden
 index.html            startpagina (pulldown + PLC-kaart)
-logo.png, favicon.*   huisstijl
+logo.png, favicon.*   huisstijl Bosman van Zaal
+greensight_*.svg      GreenSight-logo (woordmerk en icoon)
 klanten/<klant>/
     klant.py          instellingen en uitleesfuncties van de klant
     index.html        datapagina van de klant

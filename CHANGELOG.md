@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de knop **About** op de startpagina.
 
+## 0.3.2 - 2026-10-03
+
+- GreenSight-logo: Venlo-kas met oranje tandwiel (automatisering) en blad (teelt), als kop op de startpagina en in het About-venster (`greensight_logo.svg`, `greensight_icon.svg`)
+
 ## 0.3.1 - 2026-10-03
 
 - Programma heet nu **GreenSight** (was "PLC Webserver"): paginatitel, kop, About en console

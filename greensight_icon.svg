@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="GreenSight">
+  <title>GreenSight</title>
+  <!-- Venlo-kas (drie nokken) -->
+  <path d="M5 57 V31 L14 19 L23 31 L32 19 L41 31 L50 19 L59 31 V57 Z" fill="#e6f4ea" stroke="#2e8b57" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M23 31 V57 M41 31 V57 M5 31 H59" stroke="#2e8b57" stroke-width="1.6" stroke-opacity=".55"/>
+  <!-- tandwiel (automatisering) met blad (teelt) -->
+  <path d="M29.86 33.23 L30.28 30.11 L33.72 30.11 L34.14 33.23 L37.39 34.58 L39.90 32.67 L42.33 35.10 L40.42 37.61 L41.77 40.86 L44.89 41.28 L44.89 44.72 L41.77 45.14 L40.42 48.39 L42.33 50.90 L39.90 53.33 L37.39 51.42 L34.14 52.77 L33.72 55.89 L30.28 55.89 L29.86 52.77 L26.61 51.42 L24.10 53.33 L21.67 50.90 L23.58 48.39 L22.23 45.14 L19.11 44.72 L19.11 41.28 L22.23 40.86 L23.58 37.61 L21.67 35.10 L24.10 32.67 L26.61 34.58 Z" fill="#E8622A" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>
+  <circle cx="32" cy="43" r="6.2" fill="#ffffff"/>
+  <path d="M28.6 46.2 C28.4 41.2 31.6 38.6 35.8 39.2 C36.2 43.8 33.4 46.8 28.6 46.2 Z" fill="#2e8b57"/>
+  <path d="M28.9 45.9 L34.2 40.8" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+</svg>
