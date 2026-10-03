@@ -20,8 +20,10 @@
   .kop { max-width: 820px; margin: 0 auto; padding: 14px 16px;
          display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .kop img { height: 68px; display: block; }
-  .kop .web { color: var(--navy); font-size: 1rem; font-weight: 700; text-decoration: none; }
-  .kop .web:hover { color: var(--oranje); }
+  .kop .ll { margin-left: -4px; }
+  @media (max-width: 520px) { .kop .ll { height: 48px; } .kop .bvz { height: 44px; } }
+  .terug { display: inline-block; margin-bottom: 8px; color: var(--navy); font-weight: 700; text-decoration: none; }
+  .terug:hover, .terug:focus-visible { color: var(--oranje); }
 
   main { max-width: 820px; margin: 0 auto; padding: 24px 16px 40px; }
   h1 { color: var(--navy); font-size: 2rem; font-weight: 700; margin: 0; }
@@ -69,12 +71,13 @@
 <body>
 <header>
   <div class="kop">
-    <img src="/logo.png" alt="Bosman van Zaal">
-    <a class="web" href="/">&larr; Alle projecten</a>
+    <a class="home" href="/" title="Alle projecten"><img class="ll" src="/livelink_logo.svg" alt="LiveLink"></a>
+    <img class="bvz" src="/logo.png" alt="Bosman van Zaal">
   </div>
 </header>
 
 <main>
+  <a class="terug" href="/">&larr; Alle projecten</a>
   <h1>Lege Schijven Buffer</h1>
   <div class="sub">Greenbalanz · Sorteer PLC 192.168.38.212 · live, ververst elke seconde</div>
 
