@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de knop **About** op de startpagina.
 
+## 0.3.5 - 2026-10-03
+
+- Nieuw LiveLink-icoon: PLC-module (klemmenstroken, statusleds, I/O-leds) met oranje signaalbogen voor de live verbinding
+
 ## 0.3.4 - 2026-10-03
 
 - Programma heet nu **LiveLink** (was GreenSight): naam, woordmerk "LiveLink", paginatitel, About; logobestanden heten nu `livelink_logo.svg` en `livelink_icon.svg`
