@@ -1,10 +1,10 @@
 # LiveLink
 
-Versie **0.3.9** · Bosman van Zaal · Jacco van der Ven
+Versie **0.4.0** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
-## Waar staan we (v0.3.9, 3 oktober 2026)
+## Waar staan we (v0.4.0, 3 oktober 2026)
 
 - **Startpagina** heeft een pulldown-menu om een project te kiezen. Daaronder staat een kaart met de PLC's en HMI's van dat project: naam, IP-adres en online/offline (gecontroleerd met ping, elke 5 s). De browser onthoudt het laatst gekozen project.
   - **Insights** opent de datapagina. De knop is alleen zichtbaar als minstens één PLC van de klant online is.
@@ -37,6 +37,22 @@ start_webserver.bat
 
 of `python webserver.py`. Open daarna http://localhost:8080. Stoppen doe je met Ctrl+C.
 
+### Automatisch starten bij inloggen
+
+```bat
+powershell -ExecutionPolicy Bypass -File autostart.ps1
+```
+
+Dit maakt de Windows-taak **LiveLink** aan (Taakplanner). Die start de server bij elke keer inloggen op de achtergrond (`pythonw`, geen venster) en herstart hem bij een crash. Het gebeurt bij inloggen en niet bij het opstarten van de pc, omdat de VNC-knop de viewer op het bureaublad moet openen.
+
+| Wat | Commando (PowerShell) |
+|---|---|
+| Herstarten na een wijziging | `Stop-ScheduledTask LiveLink; Start-ScheduledTask LiveLink` |
+| Tijdelijk stoppen | `Stop-ScheduledTask LiveLink` |
+| Autostart verwijderen | `powershell -ExecutionPolicy Bypass -File autostart.ps1 -Verwijderen` |
+
+Draait de taak al, dan weigert `start_webserver.bat` te starten ("Poort 8080 is al in gebruik").
+
 **Afhankelijkheid:** de FINS-client (`fins.py`) komt uit het project [plc_tool](https://github.com/jaccovanderven/plc_tool). De server verwacht die in `..\_tools\plc_tool\` naast deze map.
 
 ## Opbouw
@@ -44,6 +60,7 @@ of `python webserver.py`. Open daarna http://localhost:8080. Stoppen doe je met 
 ```
 webserver.py          server: klanten laden, FINS-verbindingen, API, statische bestanden
 index.html            startpagina (pulldown + PLC-kaart)
+autostart.ps1         Windows-taak LiveLink: server starten bij inloggen
 logo.png, favicon.*   huisstijl Bosman van Zaal
 livelink_*.svg        LiveLink-logo (woordmerk en icoon)
 klanten/<klant>/
