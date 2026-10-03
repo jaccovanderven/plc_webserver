@@ -35,7 +35,7 @@ KLANTEN_MAP = os.path.join(MAP, "klanten")
 sys.path.insert(0, os.path.join(MAP, "..", "_tools", "plc_tool"))
 from fins import FinsClient  # noqa: E402
 
-VERSIE = "0.2.3"
+VERSIE = "0.2.4"
 POORT = 8080
 IDLE_SEC = 15                         # PLC-verbinding sluiten na zoveel s zonder verzoek
 VERBODEN = (".py", ".pyc", ".ini")    # worden niet als bestand geserveerd
