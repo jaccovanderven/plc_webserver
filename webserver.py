@@ -7,10 +7,12 @@ verzoeken wordt een verbinding weer gesloten.
 
 klant.py definieert NAAM, OMSCHRIJVING en API = {naam: functie(plc, cfg)},
 plus ofwel PLC_IP (één PLC) ofwel PLCS = {sleutel: {"naam", "ip", ...}}
-(meerdere PLC's; cfg is dan de dict van die PLC). Endpoints:
+(meerdere PLC's; cfg is dan de dict van die PLC), en optioneel
+VNC = {sleutel: {"naam", "ip"}} voor HMI's die via VNC bereikbaar zijn. Endpoints:
     /klant/<klant>/info               klant- en PLC-overzicht
     /klant/<klant>/api/<naam>         (één PLC)
     /klant/<klant>/api/<plc>/<naam>   (meerdere PLC's)
+    POST /klant/<klant>/vnc/<sleutel> VNC-viewer starten (alleen vanaf deze pc)
 
 Start:  python webserver.py
 Open:   http://localhost:8080
@@ -33,11 +35,12 @@ KLANTEN_MAP = os.path.join(MAP, "klanten")
 sys.path.insert(0, os.path.join(MAP, "..", "_tools", "plc_tool"))
 from fins import FinsClient  # noqa: E402
 
-VERSIE = "0.1.0"
+VERSIE = "0.2.0"
 POORT = 8080
 IDLE_SEC = 15                         # PLC-verbinding sluiten na zoveel s zonder verzoek
 VERBODEN = (".py", ".pyc", ".ini")    # worden niet als bestand geserveerd
 PING_CACHE_SEC = 4                    # online-status (ping) zo lang hergebruiken
+VNC_VIEWER = r"C:\Program Files\RealVNC\VNC Viewer\vncviewer.exe"
 
 
 def ping(ip):
@@ -91,6 +94,28 @@ class Plc:
                 self.client.close()
 
 
+class Vnc:
+    """Eén HMI van een klant die via VNC bereikbaar is (alleen ping + viewer starten)."""
+
+    def __init__(self, sleutel, cfg):
+        self.sleutel = sleutel
+        self.naam = cfg.get("naam", sleutel)
+        self.ip = cfg["ip"]
+        self.online = None
+        self.online_tijd = 0.0
+
+    def info(self):
+        return {"sleutel": self.sleutel, "naam": self.naam, "ip": self.ip, "online": self.online}
+
+    def controleer_online(self):
+        if time.monotonic() - self.online_tijd > PING_CACHE_SEC:
+            self.online = ping(self.ip)
+            self.online_tijd = time.monotonic()
+
+    def open(self):
+        subprocess.Popen([VNC_VIEWER, self.ip])
+
+
 class Klant:
     """Eén klant: module uit klanten/<sleutel>/klant.py plus zijn PLC('s)."""
 
@@ -105,11 +130,13 @@ class Klant:
             plcs = {"plc": {"naam": self.naam, "ip": module.PLC_IP,
                             "poort": getattr(module, "PLC_POORT", 9600)}}
         self.plcs = {s: Plc(s, dict(cfg)) for s, cfg in plcs.items()}
+        self.vnc = {s: Vnc(s, cfg) for s, cfg in getattr(module, "VNC", {}).items()}
 
     def info(self):
         return {"sleutel": self.sleutel, "naam": self.naam,
                 "omschrijving": self.omschrijving,
-                "plcs": [p.info() for p in self.plcs.values()]}
+                "plcs": [p.info() for p in self.plcs.values()],
+                "vnc": [v.info() for v in self.vnc.values()]}
 
     def api(self, rest):
         delen = rest.split("/")
@@ -165,10 +192,11 @@ class Handler(SimpleHTTPRequestHandler):
         pad = unquote(urlsplit(self.path).path)
 
         if pad == "/api/klanten":
-            plcs = [p for k in KLANTEN.values() for p in k.plcs.values()]
-            if plcs:
-                with ThreadPoolExecutor(len(plcs)) as pool:
-                    list(pool.map(Plc.controleer_online, plcs))
+            apparaten = [a for k in KLANTEN.values()
+                         for a in (*k.plcs.values(), *k.vnc.values())]
+            if apparaten:
+                with ThreadPoolExecutor(len(apparaten)) as pool:
+                    list(pool.map(lambda a: a.controleer_online(), apparaten))
             return self.stuur_json([k.info() for k in KLANTEN.values()])
 
         if pad == "/api/versie":
@@ -196,6 +224,23 @@ class Handler(SimpleHTTPRequestHandler):
         if pad.startswith("/klanten/"):
             return self.send_error(404)   # alleen via /klant/<naam>/
         return self.stuur_bestand(MAP, pad.lstrip("/"))
+
+    def do_POST(self):
+        """POST /klant/<klant>/vnc/<sleutel>: VNC-viewer op deze pc starten."""
+        delen = unquote(urlsplit(self.path).path).strip("/").split("/")
+        if self.client_address[0] not in ("127.0.0.1", "::1"):
+            return self.send_error(403, "Alleen vanaf deze pc")
+        if len(delen) != 4 or delen[0] != "klant" or delen[2] != "vnc":
+            return self.send_error(404)
+        klant = KLANTEN.get(delen[1])
+        vnc = klant.vnc.get(delen[3]) if klant else None
+        if vnc is None:
+            return self.send_error(404, "Onbekende VNC")
+        try:
+            vnc.open()
+            return self.stuur_json({"ok": True})
+        except OSError as e:
+            return self.stuur_json({"ok": False, "fout": str(e)})
 
     def stuur_bestand(self, map_, rest):
         if rest.lower().endswith(VERBODEN):
@@ -227,6 +272,12 @@ if __name__ == "__main__":
         print(f"  - {k.naam} ({ips})  ->  /klant/{k.sleutel}/")
     threading.Thread(target=bewaker, daemon=True).start()
     try:
-        ThreadingHTTPServer(("0.0.0.0", POORT), Handler).serve_forever()
+        # geen SO_REUSEADDR: anders kan op Windows een tweede server ongemerkt op dezelfde poort draaien
+        ThreadingHTTPServer.allow_reuse_address = False
+        try:
+            server = ThreadingHTTPServer(("0.0.0.0", POORT), Handler)
+        except OSError:
+            sys.exit(f"Poort {POORT} is al in gebruik - draait de webserver al?")
+        server.serve_forever()
     except KeyboardInterrupt:
         pass

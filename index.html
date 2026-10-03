@@ -51,6 +51,13 @@
           background: var(--oranje); color: var(--wit); font-weight: 700; font-size: 1.05rem;
           padding: 10px 16px; border-radius: 4px; }
   .knop:hover, .knop:focus-visible { background: #cf5321; }
+  .knoppen { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+  .knoppen:not(:has(.knop)) { display: none; }   /* alles offline: geen lege knoppenrij */
+  button.knop { font: inherit; font-weight: 700; font-size: 1.05rem; border: 0; cursor: pointer; }
+  .knop.tweede { background: var(--navy); }
+  .knop.tweede:hover, .knop.tweede:focus-visible { background: #2c3b5e; }
+  .melding { color: var(--fout); font-size: .95rem; }
+  .melding:empty { display: none; }
   .leeg, .fout { padding: 16px; background: var(--wit); border: 1px solid var(--rand); border-radius: 6px; }
   .fout { color: var(--fout); }
   .versie { margin-top: 32px; color: var(--muted); font-size: .85rem; }
@@ -66,7 +73,7 @@
 
 <main>
   <h1>PLC Webserver</h1>
-  <div class="sub">Kies een klant om verbinding te maken met de PLC</div>
+  <div class="sub">Kies een klant om de live PLC-gegevens te bekijken</div>
   <label class="kies" for="klant">Klant</label>
   <select id="klant"><option value="">Laden…</option></select>
   <div id="details"></div>
@@ -90,11 +97,29 @@
         <div class="inhoud">
           ${k.omschrijving ? `<div class="oms">${esc(k.omschrijving)}</div>` : ""}
           ${k.plcs.length ? "" : `<div class="regel">Nog geen PLC's ingesteld</div>`}
-          ${k.plcs.map(p => `
+          ${[...k.plcs, ...k.vnc].map(p => `
           <div class="regel"><span class="dot ${p.online === true ? "aan" : p.online === false ? "uit" : ""}"></span>${esc(p.naam)}<span class="addr">${esc(p.ip)}</span><span class="st ${p.online === false ? "uit" : ""}">${p.online === true ? "online" : p.online === false ? "offline" : "…"}</span></div>`).join("")}
-          <a class="knop" href="/klant/${encodeURIComponent(k.sleutel)}/">Verbinden</a>
+          <div class="knoppen">
+            ${k.plcs.some(p => p.online) ? `<a class="knop" href="/klant/${encodeURIComponent(k.sleutel)}/">Insights</a>` : ""}
+            ${k.vnc.filter(v => v.online).map(v => `<button type="button" class="knop tweede" data-vnc="${esc(v.sleutel)}">VNC ${esc(v.naam)}</button>`).join("")}
+          </div>
+          <div class="melding" role="status">${esc(melding)}</div>
         </div>
       </div>`;
+    doel.querySelectorAll("[data-vnc]").forEach(b => b.addEventListener("click", () => openVnc(k, b.dataset.vnc)));
+  }
+
+  let melding = "";   // blijft staan bij het verversen (elke 5 s)
+
+  async function openVnc(k, vnc) {
+    try {
+      const r = await fetch(`/klant/${encodeURIComponent(k.sleutel)}/vnc/${encodeURIComponent(vnc)}`, { method: "POST" });
+      const d = r.ok ? await r.json() : { ok: false, fout: `HTTP ${r.status}` };
+      melding = d.ok ? "" : `VNC starten mislukt: ${d.fout}`;
+    } catch (e) {
+      melding = `Server niet bereikbaar: ${e.message}`;
+    }
+    toon();
   }
 
   async function laad() {
@@ -119,7 +144,7 @@
     }
   }
 
-  keuze.addEventListener("change", toon);
+  keuze.addEventListener("change", () => { melding = ""; toon(); });
   fetch("/api/versie").then(r => r.json())
     .then(d => document.getElementById("versie").textContent = `PLC Webserver v${d.versie}`)
     .catch(() => {});

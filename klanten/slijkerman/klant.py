@@ -13,6 +13,10 @@ PLCS = {
     "ctr_rechts": {"naam": "CTR Rechts", "ip": "192.168.100.116"},  # alleen online-controle
 }
 
+VNC = {
+    "hmi": {"naam": "HMI", "ip": "192.168.100.110"},   # knop "VNC HMI" op de startpagina
+}
+
 MACHINES = [            # (sleutel, naam, DM positie, DM status of None) - in de Master PLC
     ("links", "CTR Links", 5056, 5053),
     ("rechts", "CTR Rechts", 5006, 5003),
