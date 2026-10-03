@@ -22,12 +22,12 @@
   .kop img { display: block; }
   h1.logo { margin: 0; }
   h1.logo img { height: 68px; margin-left: -4px; }
-  .kop .bvz { height: 44px; }
+  .kop .bvz { height: 68px; }
 
   main { max-width: 820px; margin: 0 auto; padding: 24px 16px 40px; }
   .sub { color: var(--oranje); font-style: italic; font-size: 1.1rem; margin: 6px 0 0; }
 
-  @media (max-width: 520px) { h1.logo img { height: 48px; } .kop .bvz { height: 32px; } }
+  @media (max-width: 520px) { h1.logo img { height: 48px; } .kop .bvz { height: 44px; } }
 
   .kies { display: block; color: var(--navy); font-weight: 700; margin-bottom: 6px; }
   select { width: 100%; max-width: 420px; font: inherit; font-size: 1.1rem; color: var(--navy);
@@ -68,10 +68,9 @@
   .fout { color: var(--fout); }
   .versie { margin-top: 32px; color: var(--muted); font-size: .85rem; }
 
-  .rechts { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .about-knop { font: inherit; font-weight: 700; font-size: .8rem; color: var(--navy); background: var(--licht);
-                border: 1px solid var(--rand); border-radius: 4px; padding: 2px 10px; cursor: pointer; }
-  .about-knop:hover, .about-knop:focus-visible { border-color: var(--oranje); color: var(--oranje); }
+  .about-link { font: inherit; color: var(--navy); background: none; border: 0; padding: 0;
+                cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .about-link:hover, .about-link:focus-visible { color: var(--oranje); }
 
   dialog#about { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 64px); padding: 0;
                  border: 1px solid var(--rand); border-top: 4px solid var(--oranje); border-radius: 6px;
@@ -100,10 +99,7 @@
 <header>
   <div class="kop">
     <h1 class="logo"><img src="livelink_logo.svg" alt="LiveLink"></h1>
-    <div class="rechts">
-      <img class="bvz" src="logo.png" alt="Bosman van Zaal">
-      <button type="button" class="about-knop" id="about-knop">About</button>
-    </div>
+    <img class="bvz" src="logo.png" alt="Bosman van Zaal">
   </div>
 </header>
 
@@ -127,7 +123,7 @@
   <select id="klant"><option value="">Laden…</option></select>
   <div class="sub">Kies een klant om de live PLC-gegevens te bekijken</div>
   <div id="details"></div>
-  <div class="versie" id="versie"></div>
+  <div class="versie"><span id="versie"></span> · <button type="button" class="about-link" id="about-knop">About</button></div>
 </main>
 
 <script>

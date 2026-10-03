@@ -1,7 +1,12 @@
 # Changelog
 
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
-De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de knop **About** op de startpagina.
+De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
+
+## 0.3.6 - 2026-10-03
+
+- Startpagina: knop About uit de kop, Bosman van Zaal-logo groter (44 → 68 px)
+- About is nu een klikbare tekst achter het versienummer onderaan de pagina
 
 ## 0.3.5 - 2026-10-03
 
