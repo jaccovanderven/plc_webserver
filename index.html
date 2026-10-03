@@ -111,7 +111,7 @@
       <div class="about-meta" id="about-meta"></div>
     </div>
   </div>
-  <p class="about-tekst">Live uitlezen van Omron-PLC's bij klanten via FINS, met online-status van PLC's en HMI's en VNC naar de HMI.</p>
+  <p class="about-tekst">Live uitlezen van Omron-PLC's per project via FINS, met online-status van PLC's en HMI's en VNC naar de HMI.</p>
   <p class="about-tekst"><a href="https://www.bosmanvanzaal.com" target="_blank" rel="noopener">www.bosmanvanzaal.com</a></p>
   <h3>Wijzigingen per versie</h3>
   <div class="about-lijst" id="about-lijst"></div>
@@ -119,9 +119,9 @@
 </dialog>
 
 <main>
-  <label class="kies" for="klant">Klant</label>
+  <label class="kies" for="klant">Project</label>
   <select id="klant"><option value="">Laden…</option></select>
-  <div class="sub">Kies een klant om de live PLC-gegevens te bekijken</div>
+  <div class="sub">Kies een project om de live PLC-gegevens te bekijken</div>
   <div id="details"></div>
   <div class="versie"><span id="versie"></span> · <button type="button" class="about-link" id="about-knop">About</button></div>
 </main>
@@ -174,13 +174,13 @@
       klanten = await r.json();
       if (!klanten.length) {
         keuze.disabled = true;
-        doel.innerHTML = '<div class="leeg">Nog geen klanten. Voeg een map met klant.py toe in <code>_webserver\\klanten</code>.</div>';
+        doel.innerHTML = '<div class="leeg">Nog geen projecten. Voeg een map met klant.py toe in <code>_webserver\\klanten</code>.</div>';
         return;
       }
       let gekozen = keuze.value;
       if (keuze.options[0].text === "Laden…") {   // eerste keer: lijst vullen
         try { gekozen = localStorage.getItem("klant") || ""; } catch (e) {}
-        keuze.innerHTML = '<option value="">— kies een klant —</option>' +
+        keuze.innerHTML = '<option value="">— kies een project —</option>' +
           klanten.map(k => `<option value="${esc(k.sleutel)}">${esc(k.naam)}</option>`).join("");
       }
       keuze.value = klanten.some(k => k.sleutel === gekozen) ? gekozen : "";
