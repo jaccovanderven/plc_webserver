@@ -1,17 +1,19 @@
 """Slijkerman - CTR.
 
 De Master PLC levert de huidige positie van CTR Links en CTR Rechts;
-de CTR-PLC's en OHT106 worden op de startpagina alleen op online-status gecontroleerd.
+de CTR-PLC's, BST 104, OHT 105 en OHT 106 worden op de startpagina alleen op online-status gecontroleerd.
 """
 
 NAAM = "Slijkerman"
 OMSCHRIJVING = ""
 
-PLCS = {
+PLCS = {                # op IP-volgorde
     "master": {"naam": "Master PLC", "ip": "192.168.100.115"},   # leest de posities
-    "ctr_links": {"naam": "CTR Links", "ip": "192.168.100.117"},  # alleen online-controle
     "ctr_rechts": {"naam": "CTR Rechts", "ip": "192.168.100.116"},  # alleen online-controle
-    "oht106": {"naam": "OHT106", "ip": "192.168.100.120"},  # alleen online-controle
+    "ctr_links": {"naam": "CTR Links", "ip": "192.168.100.117"},  # alleen online-controle
+    "bst104": {"naam": "BST 104", "ip": "192.168.100.118"},  # alleen online-controle
+    "oht105": {"naam": "OHT 105", "ip": "192.168.100.119"},  # alleen online-controle
+    "oht106": {"naam": "OHT 106", "ip": "192.168.100.120"},  # alleen online-controle
 }
 
 VNC = {

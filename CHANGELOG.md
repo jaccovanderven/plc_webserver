@@ -3,6 +3,11 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.4.4 - 2026-10-05
+
+- Slijkerman: machines BST 104 (192.168.100.118) en OHT 105 (192.168.100.119) toegevoegd, met online-controle; OHT106 heet nu OHT 106
+- Startpagina: PLC's en HMI's per klant gesorteerd op IP-adres
+
 ## 0.4.3 - 2026-10-05
 
 - Slijkerman: machine OHT106 (192.168.100.120) toegevoegd, met online-controle op de startpagina
