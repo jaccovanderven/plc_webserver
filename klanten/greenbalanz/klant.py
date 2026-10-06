@@ -11,6 +11,12 @@ OMSCHRIJVING = ""
 PLCS = {                # op IP-volgorde
     "container": {"naam": "Container PLC", "ip": "192.168.38.211"},  # alleen online-controle
     "sorteer": {"naam": "Sorteer PLC", "ip": "192.168.38.212"},
+    "afleveren": {"naam": "Afleveren", "ip": "192.168.38.213"},  # alleen online-controle
+    "bst": {"naam": "Bovenloopstapelaar (BST)", "ip": "192.168.38.214"},  # alleen online-controle
+    "ctr": {"naam": "Container Transport Robot (CTR)", "ip": "192.168.38.215"},  # alleen online-controle
+    "robot1": {"naam": "Linear Robot 1", "ip": "192.168.38.216"},  # alleen online-controle
+    "robot2": {"naam": "Linear Robot 2", "ip": "192.168.38.217"},  # alleen online-controle
+    "robot3": {"naam": "Linear Robot 3", "ip": "192.168.38.218"},  # alleen online-controle
 }
 
 ADRES_BAAN = 18857

@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.4.6 - 2026-10-06
+
+- Greenbalanz: PLC's Afleveren (.213), BST (.214), CTR (.215), Linear Robot 1 (.216), 2 (.217) en 3 (.218) toegevoegd, met online-controle
+
 ## 0.4.5 - 2026-10-06
 
 - Greenbalanz: Container PLC (192.168.38.211) toegevoegd, met online-controle op de startpagina
