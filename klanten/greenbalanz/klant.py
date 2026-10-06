@@ -8,7 +8,8 @@ en W450.03 (vrijgave lossen).
 NAAM = "Greenbalanz"
 OMSCHRIJVING = ""
 
-PLCS = {
+PLCS = {                # op IP-volgorde
+    "container": {"naam": "Container PLC", "ip": "192.168.38.211"},  # alleen online-controle
     "sorteer": {"naam": "Sorteer PLC", "ip": "192.168.38.212"},
 }
 

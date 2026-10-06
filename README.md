@@ -1,6 +1,6 @@
 # LiveLink
 
-Versie **0.4.4** · Bosman van Zaal · Jacco van der Ven
+Versie **0.4.5** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
@@ -24,7 +24,7 @@ Alle wijzigingen per versie staan in [CHANGELOG.md](CHANGELOG.md). Op de startpa
 | Klant | PLC('s) | Wat wordt uitgelezen |
 |---|---|---|
 | **3B Fundus** | Master PLC 192.168.5.30 | D0 |
-| **Greenbalanz** | Sorteer PLC 192.168.38.212 | Lege Schijven Buffer: baan die gelost wordt (D18857), aantal cups in die baan (D17700 + baan), vrijgave lossen (W450.03) |
+| **Greenbalanz** | Container PLC 192.168.38.211, Sorteer PLC 192.168.38.212 | Lege Schijven Buffer (Sorteer PLC): baan die gelost wordt (D18857), aantal cups in die baan (D17700 + baan), vrijgave lossen (W450.03). Bij de Container PLC wordt alleen gecontroleerd of hij online is. |
 | **Slijkerman** | Master PLC 192.168.100.115, CTR Rechts .116, CTR Links .117, BST 104 .118, OHT 105 .119, OHT 106 .120; HMI 192.168.100.110 (VNC) | Uit de Master PLC: CTR Links positie D5056 / status D5053, CTR Rechts positie D5006 / status D5003 (1 = Rust). Bij de CTR-PLC's, BST 104, OHT 105 en OHT 106 wordt alleen gecontroleerd of ze online zijn. |
 
 ## Starten

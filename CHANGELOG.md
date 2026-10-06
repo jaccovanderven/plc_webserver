@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.4.5 - 2026-10-06
+
+- Greenbalanz: Container PLC (192.168.38.211) toegevoegd, met online-controle op de startpagina
+
 ## 0.4.4 - 2026-10-05
 
 - Slijkerman: machines BST 104 (192.168.100.118) en OHT 105 (192.168.100.119) toegevoegd, met online-controle; OHT106 heet nu OHT 106
