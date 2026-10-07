@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.4.9 - 2026-10-07
+
+- Slijkerman: statusmelding 16 = "Storing aanwezig" toegevoegd
+
 ## 0.4.8 - 2026-10-07
 
 - Slijkerman: alle statusmeldingen van de CTR's als tekst (1 Rust t/m 46 Afduwer gaat in na lossen), niet meer alleen "Rust"

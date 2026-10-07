@@ -27,7 +27,7 @@ MACHINES = [            # (sleutel, naam, DM positie, DM status of None) - in de
 
 STATUS_TEKST = {                 # statusmeldingen van de CTR's (D5003 / D5053)
     1: "Rust", 2: "Laden gestart", 3: "Lossen gestart", 4: "Rijden vooruit", 5: "Rijden achteruit",
-    6: "Handbediening", 30: "Lier veld in", 31: "Lier naar CTR", 41: "Lift omlaag", 42: "Lift omhoog",
+    6: "Handbediening", 16: "Storing aanwezig", 30: "Lier veld in", 31: "Lier naar CTR", 41: "Lift omlaag", 42: "Lift omhoog",
     43: "Afduwer gaat uit bij laden", 44: "Afduwer gaat in bij laden",
     45: "Afduwer gaat uit bij lossen", 46: "Afduwer gaat in na lossen",
 }
