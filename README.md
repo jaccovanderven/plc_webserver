@@ -1,6 +1,6 @@
 # LiveLink
 
-Versie **0.4.7** · Bosman van Zaal · Jacco van der Ven
+Versie **0.4.8** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
