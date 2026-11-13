@@ -3,6 +3,11 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.7.0 - 2026-11-13
+
+- Eerste keer schrijven naar een PLC: nieuw POST-endpoint `/klant/<klant>/api/<plc>/<functie>` (alleen vanaf de pc waar de server draait, alleen functies uit `SCHRIJF` in `klant.py`)
+- Green Circle Growers: Oppakken actief, Neerzetten actief (aan/uit-schakelaars) en Schoon/Vuil zijn te bedienen, met bevestigingsvraag en teruglezen van het bit. Beschikbaar blijft een indicator.
+
 ## 0.6.0 - 2026-11-13
 
 - Green Circle Growers: Monitor-pagina met het positie-overzicht uit de Master PLC (17 posities Y-140 t/m Y-178): prioriteit OHC 1/2, oppakken en neerzetten (actief/beschikbaar), schoon/vuil, aantal op stapel en opslag

@@ -13,6 +13,8 @@ VNC = {sleutel: {"naam", "ip"}} voor HMI's die via VNC bereikbaar zijn. Endpoint
     /klant/<klant>/api/<naam>         (één PLC)
     /klant/<klant>/api/<plc>/<naam>   (meerdere PLC's)
     POST /klant/<klant>/vnc/<sleutel> VNC-viewer starten (alleen vanaf deze pc)
+    POST /klant/<klant>/api/<plc>/<naam>  schrijven naar de PLC, JSON-body, functie uit
+                                      SCHRIJF = {naam: functie(plc, cfg, params)} (alleen vanaf deze pc)
 
 Start:  python webserver.py
 Open:   http://localhost:8080
@@ -158,7 +160,8 @@ class Klant:
                 "plcs": [p.info() for p in self.plcs.values()],
                 "vnc": [v.info() for v in self.vnc.values()]}
 
-    def api(self, rest):
+    def api(self, rest, params=None):
+        """params None = lezen (API), anders schrijven (SCHRIJF) met die parameters."""
         delen = rest.split("/")
         if len(delen) == 1 and len(self.plcs) == 1:
             plc = next(iter(self.plcs.values()))
@@ -166,10 +169,13 @@ class Klant:
             plc = self.plcs.get(delen[0])
         else:
             return None
-        functie = getattr(self.module, "API", {}).get(delen[-1])
+        tabel = "API" if params is None else "SCHRIJF"
+        functie = getattr(self.module, tabel, {}).get(delen[-1])
         if plc is None or functie is None:
             return None
-        return plc.lees(functie)
+        if params is None:
+            return plc.lees(functie)
+        return plc.lees(lambda client, cfg: functie(client, cfg, params))
 
     def sluit_als_idle(self):
         for p in self.plcs.values():
@@ -250,10 +256,26 @@ class Handler(SimpleHTTPRequestHandler):
         return self.stuur_bestand(MAP, pad.lstrip("/"))
 
     def do_POST(self):
-        """POST /klant/<klant>/vnc/<sleutel>: VNC-viewer op deze pc starten."""
+        """POST /klant/<klant>/vnc/<sleutel>: VNC-viewer op deze pc starten.
+        POST /klant/<klant>/api/<plc>/<functie> met JSON-body: naar de PLC schrijven (SCHRIJF)."""
         delen = unquote(urlsplit(self.path).path).strip("/").split("/")
         if self.client_address[0] not in ("127.0.0.1", "::1"):
             return self.send_error(403, "Alleen vanaf deze pc")
+        if len(delen) >= 5 and delen[0] == "klant" and delen[2] == "api":
+            klant = KLANTEN.get(delen[1])
+            if klant is None:
+                return self.send_error(404, "Onbekende klant")
+            try:
+                lengte = int(self.headers.get("Content-Length", 0))
+                params = json.loads(self.rfile.read(min(lengte, 4096)) or b"{}")
+                if not isinstance(params, dict):
+                    raise ValueError
+            except ValueError:
+                return self.send_error(400, "Ongeldige JSON")
+            data = klant.api("/".join(delen[3:]), params)
+            if data is None:
+                return self.send_error(404, "Onbekende API")
+            return self.stuur_json(data)
         if len(delen) != 4 or delen[0] != "klant" or delen[2] != "vnc":
             return self.send_error(404)
         klant = KLANTEN.get(delen[1])

@@ -56,6 +56,18 @@
   .badge.vuil { color: var(--wit); background: var(--oranje); border-color: var(--oranje); }
   .badge.aan { color: var(--wit); background: var(--ok); border-color: var(--ok); }
 
+  /* schrijfbare bedieningen (knoppen) */
+  button { font: inherit; cursor: pointer; padding: 0; }
+  button:disabled { cursor: progress; opacity: .6; }
+  .schakel { position: relative; width: 44px; height: 22px; border-radius: 11px; border: 0;
+             background: #b9c0cd; vertical-align: middle; transition: background .15s; }
+  .schakel::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+                    border-radius: 50%; background: var(--wit); transition: left .15s; }
+  .schakel.aan { background: var(--ok); }
+  .schakel.aan::after { left: 24px; }
+  button.badge:hover:not(:disabled), .schakel:hover:not(:disabled) { filter: brightness(.92); }
+  button:focus-visible { outline: 2px solid var(--oranje); outline-offset: 2px; }
+
   .legenda { margin-top: 10px; color: var(--muted); font-size: .9rem; }
   .status { margin-top: 14px; font-size: .95rem; display: flex; align-items: center; gap: 8px; }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rand); flex: none; }
@@ -102,7 +114,7 @@
       </table>
     </div>
   </div>
-  <div class="legenda">Alleen lezen. Houd de muis op een waarde voor het PLC-adres.</div>
+  <div class="legenda">Oppakken actief, Neerzetten actief en Schoon/Vuil zijn te bedienen (schrijft naar de PLC, na bevestiging; alleen op de pc waar de server draait). De rest is alleen lezen. Houd de muis op een waarde voor het PLC-adres.</div>
   <div class="status" id="status"><span class="dot"></span><span id="stekst">Verbinden…</span></div>
 </main>
 
@@ -111,32 +123,87 @@
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
   // kolommen: [sleutel, soort, begin van een groep]
+  // soorten: getal, bit (indicator), knop:<tekst> (indicator), schakel (schrijfbaar), vuil (schrijfbaar)
   const KOLOMMEN = [
     ["prio1", "getal", true], ["prio2", "getal", false],
-    ["oppakken_actief", "bit", true], ["oppakken_beschikbaar", "bit", false],
-    ["neerzetten_actief", "bit", true], ["neerzetten_beschikbaar", "bit", false],
+    ["oppakken_actief", "schakel", true], ["oppakken_beschikbaar", "bit", false],
+    ["neerzetten_actief", "schakel", true], ["neerzetten_beschikbaar", "bit", false],
     ["vuil", "vuil", true], ["aantal", "getal", true],
     ["opslag_naar", "knop:Naar", true], ["opslag_van", "knop:Van", false],
     ["opslag_103", "bit", false], ["opslag_102", "bit", false],
   ];
+  const LABEL = { oppakken_actief: "Oppakken actief", neerzetten_actief: "Neerzetten actief", vuil: "Schoon/vuil" };
 
-  function cel(v, soort) {
-    if (!v) return "";
-    const t = ` title="${esc(v.adres)}"`;
-    if (soort === "getal") return `<span class="getal"${t}>${esc(v.waarde)}</span>`;
-    if (soort === "bit") return `<span class="bit${v.waarde ? " aan" : ""}"${t}></span>`;
-    if (soort === "vuil") return `<span class="badge ${v.waarde ? "vuil" : "schoon"}"${t}>${v.waarde ? "Vuil" : "Schoon"}</span>`;
-    return `<span class="badge${v.waarde ? " aan" : ""}"${t}>${esc(soort.split(":")[1])}</span>`;
-  }
-
-  function teken(rijen) {
+  // Cellen worden één keer opgebouwd en daarna ter plekke bijgewerkt, zodat een klik
+  // niet verloren gaat doordat de verversing de knop vervangt.
+  function bouw(rijen) {
     document.getElementById("rijen").innerHTML = rijen.map(r => `
-      <tr>
+      <tr data-nr="${esc(r.nr)}">
         <td class="pos"><span class="nr">${esc(r.nr)}</span><span class="y">${esc(r.y)}</span>${esc(r.naam)}</td>
-        ${KOLOMMEN.map(([s, soort, groep]) =>
-          `<td${groep ? ' class="groep"' : ""}>${cel(r[s], soort)}</td>`).join("")}
+        ${KOLOMMEN.map(([s, soort, groep]) => {
+          const c = groep ? ' class="groep"' : "";
+          if (!r[s]) return `<td${c}></td>`;
+          const d = `data-kolom="${s}"`;
+          if (soort === "getal") return `<td${c}><span class="getal" ${d}></span></td>`;
+          if (soort === "bit") return `<td${c}><span class="bit" ${d}></span></td>`;
+          if (soort === "schakel") return `<td${c}><button class="schakel" role="switch" ${d}></button></td>`;
+          if (soort === "vuil") return `<td${c}><button class="badge" ${d}></button></td>`;
+          return `<td${c}><span class="badge" ${d}>${esc(soort.split(":")[1])}</span></td>`;
+        }).join("")}
       </tr>`).join("");
   }
+
+  function zet(el, soort, v) {
+    el.title = v.adres;
+    el.dataset.waarde = v.waarde;
+    if (soort === "getal") el.textContent = v.waarde;
+    else if (soort === "vuil") {
+      el.className = "badge " + (v.waarde ? "vuil" : "schoon");
+      el.textContent = v.waarde ? "Vuil" : "Schoon";
+    } else if (soort === "schakel") {
+      el.classList.toggle("aan", v.waarde);
+      el.setAttribute("aria-checked", v.waarde);
+    } else el.classList.toggle("aan", v.waarde);
+  }
+
+  let gebouwd = false;
+  function teken(rijen) {
+    if (!gebouwd) { bouw(rijen); gebouwd = true; }
+    for (const r of rijen) {
+      const tr = document.querySelector(`#rijen tr[data-nr="${r.nr}"]`);
+      for (const [s, soort] of KOLOMMEN) {
+        const el = r[s] && tr.querySelector(`[data-kolom="${s}"]`);
+        if (el && !el.disabled) zet(el, soort.split(":")[0], r[s]);
+      }
+    }
+  }
+
+  document.getElementById("rijen").addEventListener("click", async e => {
+    const knop = e.target.closest("button[data-kolom]");
+    if (!knop || knop.disabled) return;
+    const kolom = knop.dataset.kolom;
+    const tr = knop.closest("tr");
+    const nr = Number(tr.dataset.nr);
+    const nu = knop.dataset.waarde === "true";
+    const gewenst = !nu;
+    const naam = tr.querySelector(".y").textContent + " " + tr.querySelector(".pos").lastChild.textContent;
+    const tekst = kolom === "vuil" ? (gewenst ? "Vuil" : "Schoon") : (gewenst ? "AAN" : "UIT");
+    if (!confirm(`${naam}\n${LABEL[kolom]} op ${tekst} zetten?\n\nDit schrijft naar de PLC (${knop.title}).`)) return;
+    knop.disabled = true;
+    try {
+      const r = await fetch("api/master/zet_bit", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kolom, nr, waarde: gewenst }),
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.fout);
+      zet(knop, kolom === "vuil" ? "vuil" : "schakel", d);
+    } catch (err) {
+      alert(`Schrijven mislukt: ${err.message}`);
+    } finally {
+      knop.disabled = false;
+    }
+  });
 
   async function ververs() {
     const status = document.getElementById("status");
