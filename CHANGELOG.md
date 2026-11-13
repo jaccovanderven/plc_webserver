@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.6.0 - 2026-11-13
+
+- Green Circle Growers: Monitor-pagina met het positie-overzicht uit de Master PLC (17 posities Y-140 t/m Y-178): prioriteit OHC 1/2, oppakken en neerzetten (actief/beschikbaar), schoon/vuil, aantal op stapel en opslag
+
 ## 0.5.0 - 2026-11-13
 
 - Nieuw project: Green Circle Growers, met online-controle van Master PLC (192.168.250.2), Wasser (.3), BST 401 (.4) en BST 402 (.5)
