@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.5.0 - 2026-11-13
+
+- Nieuw project: Green Circle Growers, met online-controle van Master PLC (192.168.250.2), Wasser (.3), BST 401 (.4) en BST 402 (.5)
+
 ## 0.4.9 - 2026-10-07
 
 - Slijkerman: statusmelding 16 = "Storing aanwezig" toegevoegd
