@@ -114,7 +114,7 @@
       </table>
     </div>
   </div>
-  <div class="legenda">Oppakken actief, Neerzetten actief en Schoon/Vuil zijn te bedienen (schrijft naar de PLC, na bevestiging; alleen op de pc waar de server draait). De rest is alleen lezen. Houd de muis op een waarde voor het PLC-adres.</div>
+  <div class="legenda">Oppakken actief, Neerzetten actief, Schoon/Vuil en Opslag Naar/Van zijn te bedienen (schrijft naar de PLC, na bevestiging; alleen op de pc waar de server draait). De rest is alleen lezen. Houd de muis op een waarde voor het PLC-adres.</div>
   <div class="status" id="status"><span class="dot"></span><span id="stekst">Verbinden…</span></div>
 </main>
 
@@ -132,7 +132,8 @@
     ["opslag_naar", "knop:Naar", true], ["opslag_van", "knop:Van", false],
     ["opslag_103", "bit", false], ["opslag_102", "bit", false],
   ];
-  const LABEL = { oppakken_actief: "Oppakken actief", neerzetten_actief: "Neerzetten actief", vuil: "Schoon/vuil" };
+  const LABEL = { oppakken_actief: "Oppakken actief", neerzetten_actief: "Neerzetten actief", vuil: "Schoon/vuil",
+                  opslag_naar: "Opslag Naar", opslag_van: "Opslag Van" };
 
   // Cellen worden één keer opgebouwd en daarna ter plekke bijgewerkt, zodat een klik
   // niet verloren gaat doordat de verversing de knop vervangt.
@@ -148,7 +149,7 @@
           if (soort === "bit") return `<td${c}><span class="bit" ${d}></span></td>`;
           if (soort === "schakel") return `<td${c}><button class="schakel" role="switch" ${d}></button></td>`;
           if (soort === "vuil") return `<td${c}><button class="badge" ${d}></button></td>`;
-          return `<td${c}><span class="badge" ${d}>${esc(soort.split(":")[1])}</span></td>`;
+          return `<td${c}><button class="badge" ${d}>${esc(soort.split(":")[1])}</button></td>`;
         }).join("")}
       </tr>`).join("");
   }
@@ -197,7 +198,7 @@
       });
       const d = await r.json();
       if (!d.ok) throw new Error(d.fout);
-      zet(knop, kolom === "vuil" ? "vuil" : "schakel", d);
+      zet(knop, KOLOMMEN.find(k => k[0] === kolom)[1].split(":")[0], d);
     } catch (err) {
       alert(`Schrijven mislukt: ${err.message}`);
     } finally {

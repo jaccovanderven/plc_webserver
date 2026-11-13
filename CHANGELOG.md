@@ -3,6 +3,10 @@
 Alle wijzigingen per versie. Nieuwste bovenaan. Versienummers volgen [Semantic Versioning](https://semver.org/lang/nl/).
 De bovenste versie is de versie van de server: `webserver.py` leest hem uit dit bestand en toont deze lijst via de link **About** onderaan de startpagina.
 
+## 0.7.1 - 2026-11-13
+
+- Green Circle Growers: de knoppen Opslag Naar en Van (H72/H73, rij 5 t/m 11) zijn te bedienen: de tekst blijft staan, de knop kleurt groen als het bit aan staat
+
 ## 0.7.0 - 2026-11-13
 
 - Eerste keer schrijven naar een PLC: nieuw POST-endpoint `/klant/<klant>/api/<plc>/<functie>` (alleen vanaf de pc waar de server draait, alleen functies uit `SCHRIJF` in `klant.py`)

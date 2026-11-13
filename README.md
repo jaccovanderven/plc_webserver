@@ -1,6 +1,6 @@
 # LiveLink
 
-Versie **0.7.0** · Bosman van Zaal · Jacco van der Ven
+Versie **0.7.1** · Bosman van Zaal · Jacco van der Ven
 
 Eén lokale webserver op **http://localhost:8080** voor het live uitlezen van Omron-PLC's bij klanten, via FINS. Je kiest een klant op de startpagina en opent de datapagina van die klant. Pas dan maakt de server verbinding met de PLC('s) van die klant.
 
@@ -24,7 +24,7 @@ Alle wijzigingen per versie staan in [CHANGELOG.md](CHANGELOG.md). Op de startpa
 | Klant | PLC('s) | Wat wordt uitgelezen |
 |---|---|---|
 | **3B Fundus** | Master PLC 192.168.5.30 | D0 |
-| **Green Circle Growers** | Master PLC .2, Wasser .3, BST 401 .4, BST 402 .5 (192.168.250.x) | Uit de Master PLC het positie-overzicht (17 posities, Y-140 t/m Y-178): prioriteit OHC 1 (D5901 e.v.) en OHC 2 (D6002 e.v.), oppakken actief (H116.01 e.v.) / beschikbaar (CIO 5800.01 e.v.), neerzetten actief (H110.01 e.v.) / beschikbaar (CIO 5806.01 e.v.), schoon/vuil (H122.01 e.v., aan = vuil; schrijfbaar, net als oppakken actief en neerzetten actief), aantal op stapel (D5701 e.v.), opslag naar (H72), van (H73), 103 (W70), 102 (W74). Bij de andere PLC's wordt alleen gecontroleerd of ze online zijn. |
+| **Green Circle Growers** | Master PLC .2, Wasser .3, BST 401 .4, BST 402 .5 (192.168.250.x) | Uit de Master PLC het positie-overzicht (17 posities, Y-140 t/m Y-178): prioriteit OHC 1 (D5901 e.v.) en OHC 2 (D6002 e.v.), oppakken actief (H116.01 e.v.) / beschikbaar (CIO 5800.01 e.v.), neerzetten actief (H110.01 e.v.) / beschikbaar (CIO 5806.01 e.v.), schoon/vuil (H122.01 e.v., aan = vuil; schrijfbaar, net als oppakken actief en neerzetten actief), aantal op stapel (D5701 e.v.), opslag naar (H72) en van (H73) (schrijfbaar), 103 (W70), 102 (W74). Bij de andere PLC's wordt alleen gecontroleerd of ze online zijn. |
 | **Greenbalanz** | Container PLC .211, Sorteer PLC .212, Afleveren .213, BST .214, CTR .215, Linear Robot 1 .216, 2 .217, 3 .218 (192.168.38.x) | Lege Schijven Buffer (Sorteer PLC): baan die gelost wordt (D18857), aantal cups in die baan (D17700 + baan), vrijgave lossen (W450.03). Bij alle andere PLC's wordt alleen gecontroleerd of hij online is. |
 | **Slijkerman** | Master PLC 192.168.100.115, CTR Rechts .116, CTR Links .117, BST 104 .118, OHT 105 .119, OHT 106 .120; HMI 192.168.100.110 (VNC) | Uit de Master PLC: CTR Links positie D5056 / status D5053, CTR Rechts positie D5006 / status D5003 (1 = Rust). Bij de CTR-PLC's, BST 104, OHT 105 en OHT 106 wordt alleen gecontroleerd of ze online zijn. |
 

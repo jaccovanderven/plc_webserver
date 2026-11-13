@@ -3,7 +3,7 @@
 Master PLC - overzicht van de 17 posities (Y-140 t/m Y-178), nagebouwd van
 het HMI-scherm: prioriteit OHC 1/2, oppakken en neerzetten (actief en
 beschikbaar), schoon/vuil, aantal op stapel en opslag. Oppakken actief,
-neerzetten actief en schoon/vuil zijn schrijfbaar (zet_bit), de rest alleen lezen.
+neerzetten actief, schoon/vuil en opslag naar/van zijn schrijfbaar (zet_bit), de rest alleen lezen.
 
 Bij de bitkolommen hoort rij n bij bit n vanaf het basiswoord: rij 1 = x.01,
 rij 15 = x.15, rij 16 = (x+1).00, rij 17 = (x+1).01.
@@ -78,7 +78,8 @@ API = {"overzicht": overzicht}   # bereikbaar als /klant/green_circle_growers/ap
 
 
 # --- schrijven (POST /klant/green_circle_growers/api/master/zet_bit) -------------
-SCHRIJFBAAR = ("oppakken_actief", "neerzetten_actief", "vuil")   # alleen deze kolommen
+SCHRIJFBAAR = ("oppakken_actief", "neerzetten_actief", "vuil",
+               "opslag_naar", "opslag_van")                       # alleen deze kolommen
 BIT_AREA = {AREA_CIO: 0x30, AREA_WR: 0x31, AREA_HR: 0x32}        # FINS-code voor bittoegang
 
 
@@ -86,9 +87,11 @@ def zet_bit(plc, cfg, params):
     """Zet één bit aan/uit. params: {"kolom": ..., "nr": 1..17, "waarde": true/false}."""
     kolom, nr, waarde = params.get("kolom"), params.get("nr"), params.get("waarde")
     if kolom not in SCHRIJFBAAR or not isinstance(nr, int) or isinstance(nr, bool) \
-            or nr not in ALLE or not isinstance(waarde, bool):
+            or not isinstance(waarde, bool):
         raise ValueError("Ongeldig verzoek")
-    _, gebied, letter, basis, _ = next(b for b in BITS if b[0] == kolom)
+    _, gebied, letter, basis, nrs = next(b for b in BITS if b[0] == kolom)
+    if nr not in nrs:                      # opslag alleen rij 5 t/m 11
+        raise ValueError("Ongeldig verzoek")
     woord, bit = divmod(nr, 16)
     plc._send_command(bytes([0x01, 0x02, BIT_AREA[gebied]]) + struct.pack(">H", basis + woord)
                       + bytes([bit]) + struct.pack(">H", 1) + bytes([1 if waarde else 0]))
